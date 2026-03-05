@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin – Annes Herrefrisør</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="admin.css" />
+</head>
+<body>
+
+  <div class="admin-wrapper">
+
+    <!-- TOPBAR -->
+    <header class="admin-topbar">
+      <div class="admin-logo">
+        <span class="logo-main">Annes</span>
+        <span class="logo-sub">Herrefrisør · Admin</span>
+      </div>
+      <div class="admin-topbar-right">
+        <span class="bruker-navn" id="bruker-navn"></span>
+        <button class="btn-logg-ut" id="btn-logg-ut">Logg ut</button>
+        <a href="index.html" class="btn-tilbake">← Tilbake til nettsiden</a>
+      </div>
+    </header>
+
+    <!-- INNHOLD -->
+    <main class="admin-main">
+
+      <!-- OPPSETTGUIDE (vises hvis Firebase ikke er konfigurert) -->
+      <section class="setup-guide" id="setup-guide">
+        <div class="setup-card">
+          <h1>Sett opp Supabase – én gang</h1>
+          <p>Følg disse stegene for å koble til databasen. Du gjør dette bare én gang.</p>
+          <ol class="setup-steg">
+            <li>
+              <strong>Opprett prosjekt</strong><br />
+              Gå til <a href="https://supabase.com" target="_blank" rel="noopener">supabase.com</a>,
+              logg inn og klikk <em>«New project»</em>. Gi det et navn og velg en region nær Norge
+              (f.eks. <code>West EU (Ireland)</code>).
+            </li>
+            <li>
+              <strong>Opprett databasetabell</strong><br />
+              Gå til <em>SQL Editor</em> i prosjektet og kjør dette:
+              <pre>create table nettside (
+  id bigint primary key default 1,
+  data jsonb not null default '{}'::jsonb,
+  constraint kun_en_rad check (id = 1)
+);
+
+alter table nettside enable row level security;
+
+create policy "Alle kan lese"
+  on nettside for select using (true);
+
+create policy "Innlogget kan skrive"
+  on nettside for all to authenticated
+  using (true) with check (true);</pre>
+            </li>
+            <li>
+              <strong>Legg til brukerkontoer</strong><br />
+              Gå til <em>Authentication → Users → «Invite user»</em>.
+              Opprett én konto per søster med e-post og passord.
+            </li>
+            <li>
+              <strong>Kopier inn konfigurasjon</strong><br />
+              Gå til <em>Settings → API</em>. Kopier <em>«Project URL»</em>
+              og <em>«anon public»</em>-nøkkelen inn i filen <code>supabase-config.js</code>.
+            </li>
+          </ol>
+          <p class="setup-note">Når <code>supabase-config.js</code> er fylt inn, forsvinner denne guiden automatisk.</p>
+        </div>
+      </section>
+
+      <!-- INNLOGGING -->
+      <section class="login-seksjon" id="login-seksjon">
+        <div class="login-card">
+          <h1>Logg inn</h1>
+          <p class="login-sub">Kun for Annes Herrefrisør</p>
+          <form id="login-form">
+            <div class="felt-gruppe">
+              <label for="epost">E-post</label>
+              <input type="email" id="epost" placeholder="din@epost.no" required autocomplete="email" />
+            </div>
+            <div class="felt-gruppe">
+              <label for="passord">Passord</label>
+              <input type="password" id="passord" placeholder="••••••••" required autocomplete="current-password" />
+            </div>
+            <p class="feil-melding" id="login-feil"></p>
+            <button type="submit" class="btn-lagre" id="login-btn">Logg inn</button>
+          </form>
+        </div>
+      </section>
+
+      <!-- EDITOR (vises etter innlogging) -->
+      <section class="editor-seksjon" id="editor-seksjon">
+
+        <div class="editor-header">
+          <h1>Rediger nettside</h1>
+          <p>Endre priser, åpningstider og kontaktinfo. Klikk <strong>Lagre</strong> nederst når du er ferdig.</p>
+        </div>
+
+        <!-- PRISER -->
+        <div class="editor-kort">
+          <h2>Priser</h2>
+
+          <div class="pris-gruppe">
+            <h3>Klipp</h3>
+            <div class="pris-rad" data-kat="klipp" data-idx="0">
+              <input class="input-tjeneste" type="text" placeholder="Tjenestenavn" />
+              <input class="input-pris"     type="text" placeholder="F.eks. 310 – 645,-" />
+            </div>
+            <div class="pris-rad" data-kat="klipp" data-idx="1">
+              <input class="input-tjeneste" type="text" placeholder="Tjenestenavn" />
+              <input class="input-pris"     type="text" placeholder="F.eks. 515,-" />
+            </div>
+            <div class="pris-rad" data-kat="klipp" data-idx="2">
+              <input class="input-tjeneste" type="text" placeholder="Tjenestenavn" />
+              <input class="input-pris"     type="text" placeholder="F.eks. 515,-" />
+            </div>
+          </div>
+
+          <div class="pris-gruppe">
+            <h3>Skjegg &amp; vask</h3>
+            <div class="pris-rad" data-kat="skjegg" data-idx="0">
+              <input class="input-tjeneste" type="text" placeholder="Tjenestenavn" />
+              <input class="input-pris"     type="text" placeholder="F.eks. 200 – 290,-" />
+            </div>
+            <div class="pris-rad" data-kat="skjegg" data-idx="1">
+              <input class="input-tjeneste" type="text" placeholder="Tjenestenavn" />
+              <input class="input-pris"     type="text" placeholder="F.eks. 100,-" />
+            </div>
+            <div class="pris-rad" data-kat="skjegg" data-idx="2">
+              <input class="input-tjeneste" type="text" placeholder="Tjenestenavn" />
+              <input class="input-pris"     type="text" placeholder="F.eks. 235,-" />
+            </div>
+          </div>
+
+          <div class="pris-gruppe">
+            <h3>Farge</h3>
+            <div class="pris-rad" data-kat="farge" data-idx="0">
+              <input class="input-tjeneste" type="text" placeholder="Tjenestenavn" />
+              <input class="input-pris"     type="text" placeholder="F.eks. 580 – 740,-" />
+            </div>
+            <div class="pris-rad" data-kat="farge" data-idx="1">
+              <input class="input-tjeneste" type="text" placeholder="Tjenestenavn" />
+              <input class="input-pris"     type="text" placeholder="F.eks. 740 – 1020,-" />
+            </div>
+            <div class="pris-rad" data-kat="farge" data-idx="2">
+              <input class="input-tjeneste" type="text" placeholder="Tjenestenavn" />
+              <input class="input-pris"     type="text" placeholder="F.eks. 670 – 1050,-" />
+            </div>
+          </div>
+        </div>
+
+        <!-- ÅPNINGSTIDER -->
+        <div class="editor-kort">
+          <h2>Åpningstider</h2>
+          <p class="editor-hint">Skriv «Stengt» i tidsfeltet for å markere en dag som stengt.</p>
+          <div class="aapningstider-grid">
+            <div class="aapnings-rad">
+              <span class="dag-label">Mandag</span>
+              <input type="text" class="input-tid" data-dag="0" placeholder="09:00 – 17:00" />
+            </div>
+            <div class="aapnings-rad">
+              <span class="dag-label">Tirsdag</span>
+              <input type="text" class="input-tid" data-dag="1" placeholder="09:00 – 17:00" />
+            </div>
+            <div class="aapnings-rad">
+              <span class="dag-label">Onsdag</span>
+              <input type="text" class="input-tid" data-dag="2" placeholder="09:00 – 17:00" />
+            </div>
+            <div class="aapnings-rad">
+              <span class="dag-label">Torsdag</span>
+              <input type="text" class="input-tid" data-dag="3" placeholder="09:00 – 17:00" />
+            </div>
+            <div class="aapnings-rad">
+              <span class="dag-label">Fredag</span>
+              <input type="text" class="input-tid" data-dag="4" placeholder="09:00 – 16:00" />
+            </div>
+            <div class="aapnings-rad">
+              <span class="dag-label">Lørdag</span>
+              <input type="text" class="input-tid" data-dag="5" placeholder="Stengt" />
+            </div>
+            <div class="aapnings-rad">
+              <span class="dag-label">Søndag</span>
+              <input type="text" class="input-tid" data-dag="6" placeholder="Stengt" />
+            </div>
+          </div>
+        </div>
+
+        <!-- KONTAKT -->
+        <div class="editor-kort">
+          <h2>Kontaktinfo</h2>
+          <div class="felt-gruppe">
+            <label for="input-telefon">Telefon</label>
+            <input type="text" id="input-telefon" placeholder="73 52 09 40 / 919 97 424" />
+          </div>
+          <div class="felt-gruppe">
+            <label for="input-adresse">Adresse</label>
+            <input type="text" id="input-adresse" placeholder="Prinsens gt. 12, 7012 Trondheim" />
+          </div>
+        </div>
+
+        <!-- LAGRE-KNAPP -->
+        <div class="lagre-rad">
+          <button class="btn-lagre btn-lagre--stor" id="btn-lagre">Lagre endringer</button>
+          <p class="status-melding" id="status-melding"></p>
+        </div>
+
+      </section>
+    </main>
+  </div>
+
+  <script src="supabase-config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="admin.js"></script>
+</body>
+</html>

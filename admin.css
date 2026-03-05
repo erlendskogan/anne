@@ -1,0 +1,362 @@
+/* ============================================
+   ANNES HERREFRISØR – Admin-panel
+   ============================================ */
+
+:root {
+  --cream:        #F8F4EE;
+  --warm-white:   #FDFAF6;
+  --brown-dark:   #3D2314;
+  --brown-mid:    #6B3E26;
+  --copper:       #B87333;
+  --copper-light: #D4956A;
+  --sage-light:   #C4D4BD;
+  --text-dark:    #2C1810;
+  --text-mid:     #5C4033;
+  --text-light:   #8B6E5A;
+  --border:       #E2D5C5;
+  --success:      #4A7C59;
+  --error:        #B03A2E;
+
+  --font-serif: 'Playfair Display', Georgia, serif;
+  --font-sans:  'Lato', system-ui, sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: var(--font-sans);
+  background-color: var(--cream);
+  color: var(--text-dark);
+  min-height: 100vh;
+}
+
+/* ============================================
+   TOPBAR
+   ============================================ */
+.admin-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background-color: var(--brown-dark);
+  padding: 0.9rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.admin-logo {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+.admin-logo .logo-main {
+  font-family: var(--font-serif);
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--cream);
+}
+.admin-logo .logo-sub {
+  font-family: var(--font-sans);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--copper-light);
+}
+.admin-topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.bruker-navn {
+  font-size: 0.85rem;
+  color: rgba(248, 244, 238, 0.6);
+}
+.btn-logg-ut {
+  background: none;
+  border: 1px solid rgba(255,255,255,0.2);
+  color: var(--cream);
+  padding: 0.4rem 0.9rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-family: var(--font-sans);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.btn-logg-ut:hover { background: rgba(255,255,255,0.1); }
+.btn-tilbake {
+  font-size: 0.8rem;
+  color: var(--copper-light);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.btn-tilbake:hover { color: var(--cream); }
+
+/* ============================================
+   MAIN
+   ============================================ */
+.admin-main {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem 5rem;
+}
+
+/* ============================================
+   SETUP-GUIDE
+   ============================================ */
+.setup-guide { display: none; }
+.setup-guide.synlig { display: block; }
+
+.setup-card {
+  background: var(--warm-white);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--copper);
+  border-radius: 8px;
+  padding: 2rem 2rem 2rem 2rem;
+  margin-bottom: 2rem;
+}
+.setup-card h1 {
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+  color: var(--brown-dark);
+  margin-bottom: 0.75rem;
+}
+.setup-card p {
+  font-size: 0.95rem;
+  color: var(--text-mid);
+  margin-bottom: 1.25rem;
+  line-height: 1.7;
+}
+.setup-steg {
+  list-style: decimal;
+  padding-left: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+.setup-steg li {
+  font-size: 0.9rem;
+  color: var(--text-mid);
+  line-height: 1.7;
+}
+.setup-steg strong { color: var(--text-dark); }
+.setup-steg a { color: var(--copper); }
+.setup-steg code {
+  font-family: monospace;
+  background: var(--cream);
+  padding: 0.1em 0.4em;
+  border-radius: 3px;
+  font-size: 0.85em;
+}
+.setup-steg pre {
+  margin-top: 0.5rem;
+  background: var(--cream);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 0.75rem 1rem;
+  font-size: 0.8rem;
+  white-space: pre-wrap;
+  font-family: monospace;
+  color: var(--text-dark);
+}
+.setup-note {
+  font-size: 0.8rem;
+  color: var(--text-light);
+  font-style: italic;
+  margin: 0 !important;
+}
+
+/* ============================================
+   LOGIN
+   ============================================ */
+.login-seksjon { display: none; }
+.login-seksjon.synlig { display: flex; justify-content: center; padding-top: 2rem; }
+
+.login-card {
+  background: var(--warm-white);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 2.5rem 2rem;
+  width: 100%;
+  max-width: 400px;
+}
+.login-card h1 {
+  font-family: var(--font-serif);
+  font-size: 1.75rem;
+  color: var(--brown-dark);
+  margin-bottom: 0.25rem;
+}
+.login-sub {
+  font-size: 0.85rem;
+  color: var(--text-light);
+  margin-bottom: 2rem;
+}
+.feil-melding {
+  font-size: 0.85rem;
+  color: var(--error);
+  min-height: 1.2em;
+  margin-bottom: 0.5rem;
+}
+
+/* ============================================
+   EDITOR
+   ============================================ */
+.editor-seksjon { display: none; }
+.editor-seksjon.synlig { display: block; }
+
+.editor-header {
+  margin-bottom: 2rem;
+}
+.editor-header h1 {
+  font-family: var(--font-serif);
+  font-size: 2rem;
+  color: var(--brown-dark);
+  margin-bottom: 0.4rem;
+}
+.editor-header p {
+  font-size: 0.95rem;
+  color: var(--text-mid);
+}
+
+.editor-kort {
+  background: var(--warm-white);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1.75rem 2rem;
+  margin-bottom: 1.5rem;
+}
+.editor-kort h2 {
+  font-family: var(--font-serif);
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--brown-dark);
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 1.5px solid var(--border);
+}
+.editor-hint {
+  font-size: 0.8rem;
+  color: var(--text-light);
+  font-style: italic;
+  margin-bottom: 1rem;
+  margin-top: -0.5rem;
+}
+
+/* Priser */
+.pris-gruppe {
+  margin-bottom: 1.5rem;
+}
+.pris-gruppe:last-child { margin-bottom: 0; }
+.pris-gruppe h3 {
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--copper);
+  margin-bottom: 0.6rem;
+}
+.pris-rad {
+  display: grid;
+  grid-template-columns: 1fr 160px;
+  gap: 0.6rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Åpningstider */
+.aapningstider-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.aapnings-rad {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  align-items: center;
+  gap: 1rem;
+}
+.dag-label {
+  font-size: 0.9rem;
+  color: var(--text-mid);
+  font-weight: 700;
+}
+
+/* Kontakt */
+.felt-gruppe {
+  margin-bottom: 1rem;
+}
+.felt-gruppe:last-child { margin-bottom: 0; }
+.felt-gruppe label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-mid);
+  margin-bottom: 0.4rem;
+}
+
+/* Inputs */
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+  width: 100%;
+  padding: 0.6rem 0.85rem;
+  border: 1.5px solid var(--border);
+  border-radius: 5px;
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  color: var(--text-dark);
+  background: var(--warm-white);
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+}
+input:focus {
+  border-color: var(--copper);
+  box-shadow: 0 0 0 3px rgba(184, 115, 51, 0.12);
+}
+input::placeholder { color: var(--text-light); }
+
+/* Lagre-knapp */
+.lagre-rad {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  margin-top: 0.5rem;
+}
+.btn-lagre {
+  display: inline-block;
+  padding: 0.75rem 2rem;
+  background-color: var(--brown-dark);
+  color: var(--cream);
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.15s;
+}
+.btn-lagre:hover  { background-color: var(--brown-mid); transform: translateY(-1px); }
+.btn-lagre:active { transform: translateY(0); }
+.btn-lagre:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+.btn-lagre--stor { padding: 0.9rem 2.5rem; font-size: 1rem; }
+
+.status-melding {
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+.status-melding.suksess { color: var(--success); }
+.status-melding.feil    { color: var(--error); }
+
+@media (max-width: 500px) {
+  .admin-main { padding: 1.5rem 1rem 4rem; }
+  .editor-kort { padding: 1.25rem 1rem; }
+  .pris-rad { grid-template-columns: 1fr; }
+  .aapnings-rad { grid-template-columns: 90px 1fr; }
+}
